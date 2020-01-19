@@ -1,5 +1,6 @@
 terraform {
   required_version = ">=0.12.19"
+
   backend "s3" {
     bucket = "io-thinkstack-terraform-tfstate"
     key    = "tutorial/getting-started.tfstate"
@@ -10,7 +11,7 @@ terraform {
 
 provider "aws" {
   profile = "io.thinkstack.terraform"
-  region  = "eu-west-1"
+  region  = var.region
   version = "~> 2.36.0"
 }
 
