@@ -22,3 +22,7 @@ module "bootstrap" {
   s3_logging_bucket_name = "io-thinkstack-logging-bucket"
   dynamo_db_table_name   = "terraform-locking"
 }
+//
+//module "tutorial" {
+//  source = "./modules/tutorial"
+//}
