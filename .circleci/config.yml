@@ -1,67 +1,19 @@
-version: 2
-
-defaults: &defaults
-  working_directory: ~/repo
-  docker:
-    - image: gumshoe/cci-terraform:0.0.1-alpha
-  environment:
-    TF_IN_AUTOMATION: true
-    GOOGLE_APPLICATION_CREDENTIALS: ~/repo/terraform-deploy.json
+version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@x.y
 
 jobs:
-  init:
-    <<: *defaults
+  aws-cli-example:
+    executor: aws-cli/default
     steps:
       - checkout
-      - run:
-          name: gcp auth
-          command: echo $GCP_CREDENTIALS > terraform-deploy.json
-      - run:
-          name: init
-          command: terraform init -input=false
-      - persist_to_workspace:
-          root: ~/repo
-          paths: .
-  plan:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/repo
-      - run:
-          name: plan
-          command: terraform plan -no-color -out=tfplan  -input=false
-      - store_artifacts:
-          path: ~/repo/tfplan
-          destination: tfplan
-      - persist_to_workspace:
-          root: ~/repo
-          paths: .
-  apply:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/repo
-      - run:
-          name: apply
-          command: terraform apply -input=false -auto-approve tfplan
-      - run:
-          name: show
-          command: terraform show -no-color > tfresult
-      - store_artifacts:
-          path: ~/repo/tfresult
-          destination: tfresult
+      - aws-cli/setup:
+          profile-name: example
+      - run: aws --version
 
 workflows:
   version: 2
-  build_deploy:
+  aws-cli:
     jobs:
-      - init
-      - plan:
-          requires:
-            - init
-      - apply:
-          requires:
-            - plan
-          filters:
-            branches:
-              only:
+      - aws-cli-example:
+          context: aws
