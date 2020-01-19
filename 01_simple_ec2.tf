@@ -1,5 +1,5 @@
 provider "aws" {
-  profile = "io.thinkstack.admin"
+  profile = "io.thinkstack.terraform"
   region  = "eu-west-1"
 }
 
