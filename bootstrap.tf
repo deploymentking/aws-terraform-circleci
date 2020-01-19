@@ -1,5 +1,11 @@
 terraform {
   required_version = ">=0.12.19"
+  backend "s3" {
+    bucket = "io-thinkstack-terraform-tfstate"
+    key    = "tutorial/getting-started.tfstate"
+    profile = "io.thinkstack.terraform"
+    region = "eu-west-1"
+  }
 }
 
 provider "aws" {
@@ -14,8 +20,4 @@ module "bootstrap" {
   s3_tfstate_bucket      = "io-thinkstack-terraform-tfstate"
   s3_logging_bucket_name = "io-thinkstack-logging-bucket"
   dynamo_db_table_name   = "terraform-locking"
-}
-
-module "tutorial" {
-  source = "./modules/tutorial"
 }
